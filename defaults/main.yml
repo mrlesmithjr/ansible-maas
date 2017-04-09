@@ -1,0 +1,9 @@
+---
+# defaults file for ansible-maas
+maas_adminusers:
+  - username: 'root'
+    email: 'admin@{{ maas_dns_domain }}'
+    password: 'r00tm3'
+maas_dns_domain: 'vagrant.local'
+maas_repo: 'ppa:maas/stable'
+maas_single_node_install: true
