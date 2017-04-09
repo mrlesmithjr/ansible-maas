@@ -5,5 +5,6 @@ maas_adminusers:
     email: 'admin@{{ maas_dns_domain }}'
     password: 'r00tm3'
 maas_dns_domain: 'vagrant.local'
+maas_region_url: 'http://192.168.250.10:5240/MAAS'
 maas_repo: 'ppa:maas/stable'
 maas_single_node_install: true

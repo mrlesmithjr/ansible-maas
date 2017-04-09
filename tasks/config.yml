@@ -1,0 +1,7 @@
+---
+- name: config | Configuring MAAS Region Controller
+  lineinfile:
+    dest: "/etc/maas/regiond.conf"
+    regexp: "^maas_url:"
+    line: "maas_url: {{ maas_region_url }}"
+  notify: "restart maas-regiond"
