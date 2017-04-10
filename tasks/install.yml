@@ -22,16 +22,37 @@
     state: "present"
   when: maas_single_node_install
 
+- name: install | Installing maas-region-controller
+  apt:
+    name: "maas-region-controller"
+    state: "present"
+  when: >
+        not maas_single_node_install and
+        inventory_hostname in groups['maas_region_controller']
+
+- name: install | Installing maas-rack-controller
+  apt:
+    name: "maas-rack-controller"
+    state: "present"
+  when: >
+        not maas_single_node_install and
+        inventory_hostname in groups['maas_rack_controller']
+
 - name: install | Checking If MAAS Admin Account Has Been Created
   stat:
     path: "/etc/maas/.admin_account_created"
   register: "maas_admin_account_check"
 
 - name: install | Creating MAAS Admin Account(s)
-  command: "sudo maas createadmin --username {{ item.username }} --email {{ item.email }} --password {{ item.password }}"
+  command: "maas createadmin --username {{ item.username }} --email {{ item.email }} --password {{ item.password }}"
   register: "maas_admin_account_created"
   with_items: '{{ maas_adminusers }}'
-  when: not maas_admin_account_check.stat.exists
+  when: >
+        (maas_single_node_install and
+        not maas_admin_account_check.stat.exists) or
+        (not maas_single_node_install and
+          not maas_admin_account_check.stat.exists and
+          inventory_hostname in groups['maas_region_controller'])
 
 - name: install | Marking MAAS Admin Account As Being Created
   file:
@@ -39,6 +60,7 @@
     state: "touch"
   when: maas_admin_account_created.changed
 
+# Install libvirt-bin to control KVM instances
 - name: install | Installing Libvirt (KVM)
   apt:
     name: "libvirt-bin"
