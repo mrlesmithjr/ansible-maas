@@ -76,3 +76,4 @@
     - 'httplib2'
     - 'maasutil'
     - 'oauth'
+  when: not ansible_check_mode
