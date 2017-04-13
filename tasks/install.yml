@@ -77,5 +77,6 @@
     - 'jinja2'
     - 'maasutil'
     - 'oauth'
+    - 'python-libmaas'
     - 'pyyaml'
   when: not ansible_check_mode
