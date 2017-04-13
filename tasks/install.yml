@@ -82,10 +82,10 @@
     - 'pyyaml'
   when: not ansible_check_mode
 
-- name: install | Installing MAAS Python Module(s)
-  pip:
-    name: "{{ item }}"
-    state: "present"
-    executable: pip3
-  with_items:
-    - 'python-libmaas'
+# - name: install | Installing MAAS Python Module(s)
+#   pip:
+#     name: "{{ item }}"
+#     state: "present"
+#     executable: pip3
+#   with_items:
+#     - 'python-libmaas'
