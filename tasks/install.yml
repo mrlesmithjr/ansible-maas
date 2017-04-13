@@ -74,6 +74,8 @@
     - 'argparse'
     - 'argparse_config'
     - 'httplib2'
+    - 'jinja2'
     - 'maasutil'
     - 'oauth'
+    - 'pyyaml'
   when: not ansible_check_mode

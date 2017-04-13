@@ -5,3 +5,6 @@
 
 - include: config.yml
   when: not ansible_check_mode
+
+- include: users.yml
+  when: maas_setup_user
