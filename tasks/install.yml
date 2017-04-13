@@ -10,6 +10,8 @@
     - 'python-dev'
     - 'python-pip'
     - 'python-setuptools'
+    - 'python3-setuptools'
+    - 'python3-pip'
 
 - name: install | Adding MAAS Repo Info
   apt_repository:
