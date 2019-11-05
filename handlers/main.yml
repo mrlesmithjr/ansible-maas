@@ -1,6 +1,30 @@
 ---
-# handlers file for ansible-maas
-- name: restart maas-regiond
+- name: "restart maas-regiond"
   service:
     name: "maas-regiond"
     state: "restarted"
+  listen: "restart all maas-regiond services"
+
+- name: "restart maas-dhcpd"
+  service:
+    name: "maas-dhcpd"
+    state: "restarted"
+  listen: "restart all maas-regiond services"
+
+- name: "restart maas-http"
+  service:
+    name: "maas-http"
+    state: "restarted"
+  listen: "restart all maas-regiond services"
+
+- name: "restart maas-proxy"
+  service:
+    name: "maas-proxy"
+    state: "restarted"
+  listen: "restart all maas-regiond services"
+
+- name: "restart maas-syslog"
+  service:
+    name: "maas-syslog"
+    state: "restarted"
+  listen: "restart all maas-regiond services"
