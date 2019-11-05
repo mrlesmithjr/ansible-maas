@@ -1,65 +1,73 @@
-Role Name
-=========
+# ansible-maas-regiond
 
-An [Ansible] role to install/configure [MAAS]
+[![contributing][contributing-img]](CONTRIBUTING.md)
 
-Requirements
-------------
+1. [Overview](#overview)
+1. [Description](#description)
+1. [Requirements](#requirements)
+1. [Setup](#setup)
+1. [Role Variables](#role-variables)
+1. [Playbook Example](#playbook-example)
+1. [Dependencies](#dependencies)
+1. [Limitations](#limitations)
+1. [Development](#development)
 
-None
+## Overview
 
-Role Variables
---------------
+[MAAS](https://maas.io/docs/what-is-maas) is Metal As A Service. It lets you treat physical servers like virtual machines (instances)
+in the cloud. Rather than having to manage each server individually, MAAS turns your bare metal
+into an elastic cloud-like resource.
 
+## Description
+
+This role install and configure [MAAS Region Controller](https://maas.io/docs/region-controller).
+
+## Requirements
+
+| Type       | RAM  | CPU | Disk |
+|------------|------|-----|------|
+| PostgreSQL | 2048 | 2.0 | 20   |
+| Regiond    | 2048 | 2.0 | 5    |
+
+
+## Setup
+
+Use `ansible-galaxy` or download the role in your `roles` directory.
+
+## Role Variables
+
+```yaml
+maas_users:
+  admins:
+    - username: foobar
+      email: "foobar@{{ maas_dns.domain }}"
+      password: ultraSecret
 ```
----
-# defaults file for ansible-maas
-maas_adminusers:
-  - username: 'root'
-    email: 'admin@{{ maas_dns_domain }}'
-    password: 'r00tm3'
-maas_dns_domain: 'vagrant.local'
-maas_region_controller: '192.168.250.10'
-maas_region_controller_url: 'http://{{ maas_region_controller }}:5240/MAAS'
-maas_repo: 'ppa:maas/stable'
 
-# Defines if maas user should generate ssh keys
-# Usable for remote KVM/libvirt power actions
-maas_setup_user: false
+## Playbook Example
 
-maas_single_node_install: true
-```
+Use default configuration, means that nothing will be done.
 
-Dependencies
-------------
-
-None
-
-Example Playbook
-----------------
-
-```
----
-- hosts: maas
-  vars:
+```yaml
+- hosts: localhost
   roles:
-    - role: ansible-maas
-  tasks:
+    - ansible-maas-regiond
 ```
 
-License
--------
+## Dependencies
 
-BSD
+None.
 
-Author Information
-------------------
+## Limitations
 
-Larry Smith Jr.
-- [@mrlesmithjr]
-- http://everythingshouldbevirtual.com
-- mrlesmithjr [at] gmail.com
+So far, this is compatible with Debian and derivatives.
 
-[@mrlesmithjr]: <https://www.twitter.com/mrlesmithjr>
-[Ansible]: <https://www.ansible.com>
-[MAAS]: <https://maas.io/>
+## Development
+
+Please read carefully CONTRIBUTING.md before making a merge request.
+
+[contributing-img]: https://img.shields.io/badge/contributing--grey.svg
+
+## Author Information
+
+Forked from [mrlesmithjr/ansible-cloud-init](https://github.com/mrlesmithjr/ansible-maas)
