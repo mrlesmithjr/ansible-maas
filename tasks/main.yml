@@ -1,5 +1,4 @@
 ---
-# tasks file for ansible-maas
 
 - include: install.yml
 

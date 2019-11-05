@@ -1,12 +1,14 @@
 galaxy_info:
-  author: Larry Smith Jr.
-  description: An [Ansible] role to install/configure [MAAS]
-  license: license (GPLv2, CC-BY, etc)
-  min_ansible_version: 1.2
+  author: Larry Smith Jr., Leslie-Alexandre DENIS
+  description: Install and configure MAAS Regiond
+  license: MIT
+  min_ansible_version: 2.7
   platforms:
     - name: Ubuntu
       versions:
-        - xenial
+        - bionic
   galaxy_tags:
     - system
+    - installer
+    - maas
 dependencies: []
