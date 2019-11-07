@@ -36,12 +36,22 @@ Use `ansible-galaxy` or download the role in your `roles` directory.
 
 ## Role Variables
 
+NB: PostgreSQL password can be supplied as unhashed string or MD5 one with username concatenated.
+
+For example:
+```shell
+$ USER=maas PASSWORD=pwetPwet \
+        echo md5$(echo -n "${USER}${PASSWORD}" | md5sum | awk '{print $1}')
+```
+
 ```yaml
 maas_users:
   admins:
     - username: foobar
       email: "foobar@{{ maas_dns.domain }}"
-      password: ultraSecret
+      # $ USER=maas PASSWORD=pwetPwet \
+      #   echo md5$(echo -n "${USER}${PASSWORD}" | md5sum | awk '{print $1}')
+      password: md5ee79bb3a790bb6c76f854e897eff29b5
 ```
 
 ## Playbook Example
@@ -70,4 +80,4 @@ Please read carefully CONTRIBUTING.md before making a merge request.
 
 ## Author Information
 
-Forked from [mrlesmithjr/ansible-cloud-init](https://github.com/mrlesmithjr/ansible-maas)
+Forked from [mrlesmithjr/ansible-maas](https://github.com/mrlesmithjr/ansible-maas)
