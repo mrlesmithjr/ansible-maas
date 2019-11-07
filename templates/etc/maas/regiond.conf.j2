@@ -1,0 +1,11 @@
+# {{ ansible_managed }}
+database_host: {{ maas_database.host | default("localhost") }}
+database_name: {{ maas_database.name | default("maasdb") }}
+database_pass: {{ maas_database.password | mandatory() }}
+database_port: {{ maas_database.port | default("5432") }}
+database_user: {{ maas_database.user | default("maas") }}
+{% if maas.single_node %}
+maas_url: {{ maas_regiond.api.scheme }}://{{ maas_regiond.api.url }}
+{% else %}
+maas_url: {{ maas_regiond.api.scheme }}://127.0.0.1:5240/MAAS
+{% endif %}
