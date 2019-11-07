@@ -1,0 +1,15 @@
+---
+# TODO: use regiond API
+- name: "install | creating maas admin account(s)"
+  shell:
+    "maas createadmin
+      --username={{ _admins.username | quote() }}
+      --password={{ _admins.password | quote() }}
+      --email={{ _admins.email | quote() }}"
+  args:
+    executable: "/bin/bash"
+    creates: "/etc/maas/.admin_users_created"
+  loop: "{{ maas_users.admins }}"
+  loop_control:
+    loop_var: _admins
+  notify: "mark admin users as created"
