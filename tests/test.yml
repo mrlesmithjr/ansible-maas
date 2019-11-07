@@ -1,5 +1,19 @@
 ---
 - hosts: localhost
-  remote_user: root
   roles:
-    - ansible-maas-regiond
+    - ../ansible-maas-regiond
+  vars:
+    maas:
+      repository: "ppa:maas/stable"
+      single_node: true
+    maas_users:
+      admins:
+        - username: foobar
+          email: "foobar@foobar.{{ maas_dns.domain }}"
+          password: ultraSecret
+    maas_database:
+      host: localhost
+      name: maasdb
+      user: maas
+      password: pwetPwet
+      port: 5432
