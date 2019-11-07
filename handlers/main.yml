@@ -28,3 +28,14 @@
     name: "maas-syslog"
     state: "restarted"
   listen: "restart all maas-regiond services"
+
+- name: "mark admin users as created"
+  file:
+    path: "/etc/maas/.admin_users_created"
+    state: "touch"
+
+- name: "init maas controller"
+  shell: "maas init --skip-admin"
+  args:
+    executable: "/bin/bash"
+    creates: "/var/lib/maas/secret"

@@ -3,19 +3,31 @@ maas:
   repository: "ppa:maas/stable"
   single_node: false
 
+maas_database:
+  host: localhost
+  name: maasdb
+  user: maas
+  password:
+  port: 5432
+
 maas_regiond:
-  requirements: []
+  requirements:
+    - "libpq-dev"
+    - "postgresql-client"
+    - "python-psycopg2"
+    - "python3-psycopg2"
   package: "maas-region-controller"
   kvm: false
   api:
     scheme: "http"
-    url: "{{ maas_regiond.api.scheme }}://{{ ansible_default_ipv4.address }}:5240/MAAS"
+    url: "{{ ansible_default_ipv4.address }}:5240/MAAS"
 
 maas_dns:
-  domain: "maas.local"
+  domain: "maas"
 
 maas_users:
   admins: []
+  users: []
 
 maas_libs:
   - "python3-libmaas"
