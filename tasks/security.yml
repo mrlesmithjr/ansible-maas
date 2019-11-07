@@ -1,0 +1,8 @@
+---
+
+# TODO
+# chmod 640 /etc/maas/rackd.conf
+# chmod 640 /etc/maas/regiond.conf
+#
+# chmod 600 /var/lib/maas/secret
+# /etc/postgresql/10/main/pg_hba.conf
