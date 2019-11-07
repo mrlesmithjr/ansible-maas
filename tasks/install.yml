@@ -3,16 +3,14 @@
   apt_repository:
     repo: "{{ maas.repository }}"
     state: "present"
+    update_cache: true
 
 - name: "install | ensure requirements are installed"
   package:
-    name: "{{ _package }}"
+    name: "{{ maas_regiond.requirements }}"
     state: "present"
     update_cache: true
     cache_valid_time: 3600
-  loop: "{{ maas_regiond.requirements }}"
-  loop_control:
-    var: _package
 
 - name: "install | install all maas components (single-node)"
   package:
@@ -21,6 +19,7 @@
     update_cache: true
     cache_valid_time: 3600
   when: maas.single_node
+  notify: "init maas controller"
 
 - name: "install | install maas-region-controller"
   package:
@@ -29,35 +28,16 @@
     update_cache: true
     cache_valid_time: 3600
   when: not maas.single_node
+  notify: "init maas controller"
 
-# TODO: use regiond API
-- name: "install | check if maas admin account is present"
-  stat:
-    path: "/etc/maas/.admin_account_created"
-  register: _maas_admin_account_check
-
-# TODO: use regiond API
-- name: "install | creating maas admin account(s)"
-  command: >
-    "maas createadmin
-      --username {{ _admins.username }}
-      --email {{ _admins.email }}
-      --password {{ _admins.password }}"
-  register: _maas_admin_account
-  loop: "{{ maas_users.admins }}"
-  loop_control:
-    var: _admins
-  when: >
-        (maas.single_node and not _maas_admin_account_check.stat.exists) or
-        (not maas.single_node and not _maas_admin_account_check.stat.exists)
-
-# TODO: use regiond API
-- name: "install | mark maas admin account as being created"
-  file:
-    path: "/etc/maas/.admin_account_created"
-    state: "touch"
-  when: _maas_admin_account.changed
-
+- name: "install | update postgres password"
+  postgresql_user:
+    db: "{{ maas_database.name }}"
+    name: "{{ maas_database.user }}"
+    password: "{{ maas_database.password | mandatory() }}"
+    encrypted: yes
+  become: true
+  become_user: postgres
 
 - name: "install | install kvm support"
   package:
@@ -69,5 +49,5 @@
     - "libvirt-daemon-system"
     - "qemu-kvm"
   loop_control:
-    var: _kvm
-  when: kvm
+    loop_var: _kvm
+  when: maas_regiond.kvm
