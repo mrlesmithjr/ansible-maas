@@ -1,0 +1,7 @@
+---
+- name: "assert | ensure that db password is set"
+  assert:
+    that:
+      - (maas_database.password is defined and maas_database.password)
+      - maas_database.password is string()
+      - maas_database.password | length() > 0

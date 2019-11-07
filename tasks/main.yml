@@ -1,9 +1,13 @@
 ---
 
-- include: install.yml
+- name: "import | pass assertions"
+  import_tasks: assert.yml
 
-- include: config.yml
-  when: not ansible_check_mode
+- name: "import | install maas region controller"
+  import_tasks: install.yml
 
-- include: users.yml
-  when: maas_setup_user
+- name: "import | configure maas region controller"
+  import_tasks: config.yml
+
+- name: "import | manage maas users"
+  import_tasks: user.yml
