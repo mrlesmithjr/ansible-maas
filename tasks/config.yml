@@ -1,53 +1,56 @@
 ---
 - name: config | Configuring MAAS Region Controller
-  lineinfile:
-    dest: "/etc/maas/regiond.conf"
+  ansible.builtin.lineinfile:
+    dest: /etc/maas/regiond.conf
     regexp: "^maas_url:"
     line: "maas_url: {{ maas_region_controller_url }}"
-  notify: "restart maas-regiond"
+  notify: restart maas-regiond
   when: >
-        maas_single_node_install or
-        (not maas_single_node_install and
-          inventory_hostname in groups['maas_region_controller'])
+    maas_single_node_install|bool or
+    (not maas_single_node_install|bool and
+      inventory_hostname in groups['maas_region_controller'])
+  become: true
 
 - name: config | Setting MAAS Region Controller
-  set_fact:
+  ansible.builtin.set_fact:
     maas_region_controller_host: "{{ groups['maas_region_controller'][0] }}"
   when: >
-        not maas_single_node_install
+    not maas_single_node_install|bool
 
 - name: config | Capturing MAAS Region Controller Secret
-  command: "cat /var/lib/maas/secret"
-  register: "maas_region_controller_secret_raw"
+  ansible.builtin.command: cat /var/lib/maas/secret
+  register: maas_region_controller_secret_raw
   when: >
-        not maas_single_node_install and
-        inventory_hostname == maas_region_controller_host
+    not maas_single_node_install|bool and
+    inventory_hostname == maas_region_controller_host
+  become: true
 
 - name: config | Setting MAAS Region Controller Secret Fact
-  set_fact:
-    maas_region_controller_secret: '{{ maas_region_controller_secret_raw.stdout }}'
+  ansible.builtin.set_fact:
+    maas_region_controller_secret: "{{ maas_region_controller_secret_raw.stdout }}"
   when: >
-        not maas_single_node_install and
-        inventory_hostname == maas_region_controller_host
+    not maas_single_node_install|bool and
+    inventory_hostname == maas_region_controller_host
 
 - name: config | Checking If Rack Controller Is Registered With Region Controller
-  stat:
-    path: "/etc/maas/.controller_registered"
-  register: "maas_controller_registered"
+  ansible.builtin.stat:
+    path: /etc/maas/.controller_registered
+  register: maas_controller_registered
   when: >
-        not maas_single_node_install and
-        inventory_hostname in groups['maas_rack_controller']
+    not maas_single_node_install|bool and
+    inventory_hostname in groups['maas_rack_controller']
 
 - name: config | Setting MAAS Region Controller Secret Fact
-  set_fact:
+  ansible.builtin.set_fact:
     maas_region_controller_secret: "{{ hostvars[maas_region_controller_host]['maas_region_controller_secret'] }}"
   when: >
-        not maas_single_node_install and
-        inventory_hostname in groups['maas_rack_controller']
+    not maas_single_node_install|bool and
+    inventory_hostname in groups['maas_rack_controller']
 
 - name: config | Registering Rack Controller
-  command: "maas-rack register --url {{ maas_region_controller_url }} --secret {{ maas_region_controller_secret }}"
+  ansible.builtin.command: "maas-rack register --url {{ maas_region_controller_url }} --secret {{ maas_region_controller_secret }}"
   when: >
-        not maas_single_node_install and
-        inventory_hostname in groups['maas_rack_controller'] and
-        not maas_controller_registered.stat.exists
+    not maas_single_node_install|bool and
+    inventory_hostname in groups['maas_rack_controller'] and
+    not maas_controller_registered.stat.exists
+  become: true

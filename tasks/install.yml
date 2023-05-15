@@ -1,85 +1,78 @@
 ---
 - name: install | Installing Pre-Reqs
-  apt:
-    name:
-      - 'build-essential'
-      - 'libffi-dev'
-      - 'libssl-dev'
-      - 'python3-setuptools'
-      - 'python3-pip'
-    state: "present"
-    update_cache: yes
+  ansible.builtin.apt:
+    name: "{{ maas_debian_pre_reqs }}"
+    state: present
+  become: true
 
-- name: install | Adding MAAS Repo Info
-  apt_repository:
-    repo: '{{ maas_repo }}'
-    state: "present"
+- name: install | Adding MAAS Repo
+  ansible.builtin.apt_repository:
+    repo: "{{ maas_repo }}"
+    state: present
+  become: true
 
 - name: install | Installing MAAS (Single-Node)
-  apt:
-    name: "maas"
-    state: "present"
-  when: maas_single_node_install
+  ansible.builtin.apt:
+    name: maas
+    state: present
+  when: maas_single_node_install|bool
+  become: true
 
 - name: install | Installing maas-region-controller
-  apt:
-    name: "maas-region-controller"
-    state: "present"
+  ansible.builtin.apt:
+    name: maas-region-controller
+    state: present
   when: >
-        not maas_single_node_install and
-        inventory_hostname in groups['maas_region_controller']
+    not maas_single_node_install|bool and
+    inventory_hostname in groups['maas_region_controller']
+  become: true
 
 - name: install | Installing maas-rack-controller
-  apt:
-    name: "maas-rack-controller"
-    state: "present"
+  ansible.builtin.apt:
+    name: maas-rack-controller
+    state: present
   when: >
-        not maas_single_node_install and
-        inventory_hostname in groups['maas_rack_controller']
+    not maas_single_node_install|bool and
+    inventory_hostname in groups['maas_rack_controller']
 
 - name: install | Checking If MAAS Admin Account Has Been Created
-  stat:
-    path: "/etc/maas/.admin_account_created"
-  register: "maas_admin_account_check"
+  ansible.builtin.stat:
+    path: /etc/maas/.admin_account_created
+  register: maas_admin_account_check
 
 - name: install | Creating MAAS Admin Account(s)
-  command: "maas createadmin --username {{ item.username }} --email {{ item.email }} --password {{ item.password }}"
-  register: "maas_admin_account_created"
-  with_items: '{{ maas_adminusers }}'
+  ansible.builtin.command: "maas createadmin --username {{ item.username }} --email {{ item.email }} --password {{ item.password }}"
+  register: maas_admin_account_created
+  loop: "{{ maas_adminusers }}"
   when: >
-        (maas_single_node_install and
-        not maas_admin_account_check.stat.exists) or
-        (not maas_single_node_install and
-          not maas_admin_account_check.stat.exists and
-          inventory_hostname in groups['maas_region_controller'])
+    (maas_single_node_install|bool and
+    not maas_admin_account_check.stat.exists) or
+    (not maas_single_node_install|bool and
+      not maas_admin_account_check.stat.exists and
+      inventory_hostname in groups['maas_region_controller'])
+  become: true
+  no_log: true
 
 - name: install | Marking MAAS Admin Account As Being Created
-  file:
-    path: "/etc/maas/.admin_account_created"
-    state: "touch"
+  ansible.builtin.file:
+    path: /etc/maas/.admin_account_created
+    state: touch
   when: maas_admin_account_created.changed
+  become: true
 
 # Install libvirt-bin to control KVM instances
 - name: install | Installing Libvirt (KVM)
-  apt:
+  ansible.builtin.apt:
     name:
       - qemu-kvm
       - libvirt-daemon-system
-    state: "present"
+    state: present
+  when: maas_kvm_management|bool
+  become: true
 
-- name: install | Installing MAAS Python Module(s)
-  pip:
-    name:
-      - 'jinja2'
-      - 'maasutil'
-      - 'oauth'
-      - 'pyyaml'
-    state: "present"
-  when: not ansible_check_mode
-
-- name: install | Installing MAAS Python Module(s)
-  pip:
+- name: install | Installing MAAS Python Requirements
+  ansible.builtin.pip:
     executable: pip3
-    name:
-      - 'python-libmaas'
-    state: "present"
+    name: "{{ maas_python_reqs }}"
+    state: present
+  become: true

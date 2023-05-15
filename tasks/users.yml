@@ -1,5 +1,6 @@
 ---
 - name: users | Setting Up maas User
-  user:
-    generate_ssh_key: yes
-    name: "maas"
+  ansible.builtin.user:
+    generate_ssh_key: true
+    name: maas
+  become: true

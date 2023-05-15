@@ -2,11 +2,11 @@ galaxy_info:
   author: Larry Smith Jr.
   description: An [Ansible] role to install/configure [MAAS]
   license: license (GPLv2, CC-BY, etc)
-  min_ansible_version: 1.2
+  min_ansible_version: "1.2"
   platforms:
     - name: Ubuntu
       versions:
-        - xenial
+        - all
   galaxy_tags:
     - system
 dependencies: []
