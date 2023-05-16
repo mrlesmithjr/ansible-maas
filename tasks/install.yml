@@ -40,7 +40,7 @@
     path: /etc/maas/.admin_account_created
   register: maas_admin_account_check
 
-- name: install | Creating MAAS Admin Account(s)
+- name: install | Creating MAAS Admin Account(s) # noqa no-changed-when
   ansible.builtin.command: "maas createadmin --username {{ item.username }} --email {{ item.email }} --password {{ item.password }}"
   register: maas_admin_account_created
   loop: "{{ maas_adminusers }}"
@@ -53,10 +53,11 @@
   become: true
   no_log: true
 
-- name: install | Marking MAAS Admin Account As Being Created
+- name: install | Marking MAAS Admin Account As Being Created # noqa no-handler
   ansible.builtin.file:
     path: /etc/maas/.admin_account_created
     state: touch
+    mode: u=rw,g=r,o=r
   when: maas_admin_account_created.changed
   become: true
 

@@ -20,6 +20,7 @@
 - name: config | Capturing MAAS Region Controller Secret
   ansible.builtin.command: cat /var/lib/maas/secret
   register: maas_region_controller_secret_raw
+  changed_when: false
   when: >
     not maas_single_node_install|bool and
     inventory_hostname == maas_region_controller_host
@@ -49,6 +50,7 @@
 
 - name: config | Registering Rack Controller
   ansible.builtin.command: "maas-rack register --url {{ maas_region_controller_url }} --secret {{ maas_region_controller_secret }}"
+  changed_when: false
   when: >
     not maas_single_node_install|bool and
     inventory_hostname in groups['maas_rack_controller'] and
