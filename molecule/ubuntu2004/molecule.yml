@@ -24,6 +24,10 @@ platforms:
     # groups: []
 provisioner:
   name: ansible
+  inventory:
+    group_vars:
+      all:
+        maas_version: 3.1
   playbooks:
     converge: ../shared/converge.yml
     prepare: ../shared/prepare.yml
