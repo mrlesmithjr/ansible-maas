@@ -1,65 +1,42 @@
-Role Name
-=========
+# ansible-maas
 
-An [Ansible] role to install/configure [MAAS]
+An [Ansible](https://www.ansible.com) role to install/configure [MAAS](https://maas.io/)
 
-Requirements
-------------
+## Build Status
 
-None
+### GitHub Actions
 
-Role Variables
---------------
+![Molecule Test](https://github.com/mrlesmithjr/ansible-maas/workflows/Molecule%20Test/badge.svg)
 
-```
----
-# defaults file for ansible-maas
-maas_adminusers:
-  - username: 'root'
-    email: 'admin@{{ maas_dns_domain }}'
-    password: 'r00tm3'
-maas_dns_domain: 'vagrant.local'
-maas_region_controller: '192.168.250.10'
-maas_region_controller_url: 'http://{{ maas_region_controller }}:5240/MAAS'
-maas_repo: 'ppa:maas/stable'
+### Travis CI
 
-# Defines if maas user should generate ssh keys
-# Usable for remote KVM/libvirt power actions
-maas_setup_user: false
+[![Build Status](https://travis-ci.org/mrlesmithjr/ansible-maas.svg?branch=master)](https://travis-ci.org/mrlesmithjr/ansible-maas)
 
-maas_single_node_install: true
-```
+## Requirements
 
-Dependencies
-------------
+For any required Ansible roles, review:
+[requirements.yml](requirements.yml)
 
-None
+## Role Variables
 
-Example Playbook
-----------------
+[defaults/main.yml](defaults/main.yml)
 
-```
----
-- hosts: maas
-  vars:
-  roles:
-    - role: ansible-maas
-  tasks:
-```
+## Dependencies
 
-License
--------
+## Example Playbook
 
-BSD
+[playbook.yml](playbook.yml)
 
-Author Information
-------------------
+## License
+
+MIT
+
+## Author Information
 
 Larry Smith Jr.
-- [@mrlesmithjr]
-- http://everythingshouldbevirtual.com
-- mrlesmithjr [at] gmail.com
 
-[@mrlesmithjr]: <https://www.twitter.com/mrlesmithjr>
-[Ansible]: <https://www.ansible.com>
-[MAAS]: <https://maas.io/>
+- [@mrlesmithjr](https://twitter.com/mrlesmithjr)
+- [mrlesmithjr@gmail.com](mailto:mrlesmithjr@gmail.com)
+- [https://everythingshouldbevirtual.com](https://everythingshouldbevirtual.com)
+
+> NOTE: Repo has been created/updated using [https://github.com/mrlesmithjr/cookiecutter-ansible-role](https://github.com/mrlesmithjr/cookiecutter-ansible-role) as a template.
